@@ -2,8 +2,11 @@ package chap07;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 
 public class UserRegisterTest {
     private UserRegister userRegister;
@@ -50,5 +53,16 @@ public class UserRegisterTest {
 
         assertTrue(spyEmailNotifier.isCalled());
         assertEquals("email@email.com", spyEmailNotifier.getEmail());
+    }
+
+    @Test
+    void 회원가입_하면_메일_전송_argCaptor() {
+        userRegister.register("id", "pw", "email@email.com");
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        then(mockEmailNotifier).should().sendRegisterEmail(captor.capture());
+
+        String realEmail = captor.getValue();
+        assertEquals("email@email.com", realEmail);
     }
 }

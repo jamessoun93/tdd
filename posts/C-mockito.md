@@ -184,3 +184,96 @@ public class GameTest {
 `BDDMockito.then()` 은 메서드 호출 여부를 검증할 모의 객체를 전달받는다.
 
 `should()` 메서드는 모의 객체의 매서드가 불려야 한다는 것을 설정하고 `should()` 메서드 다음에 실제로 불려야 할 메서드를 지정한다.
+
+만약 정확한 값이 아니라 메서드 호출 여부만 중요하다면 `any()`, `anyInt()` 등을 사용하여 지정할 수 있다. 
+
+```java
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+
+public class GameTest {
+    @Test
+    void init() {
+        GameNumGen genMock = mock(GameNumGen.class);
+        Game game = new Game(genMock);
+        game.init(GameLevel.EASY);
+
+//        then(genMock).should().generate(GameLevel.EASY);
+        then(genMock).should().generate(any());
+    }
+}
+```
+
+정확하게 한 번만 호출된 것을 검증하고 싶은 경우 `should()` 메서드에 `Mockito.only()` 를 인자로 전달하면 된다.
+
+```java
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+
+public class GameTest {
+    @Test
+    void init() {
+        GameNumGen genMock = mock(GameNumGen.class);
+        Game game = new Game(genMock);
+        game.init(GameLevel.EASY);
+
+//        then(genMock).should().generate(GameLevel.EASY);
+        then(genMock).should(only()).generate(any());
+    }
+}
+```
+
+메서드 호출 횟수를 검증하기 위해 Mockito 가 제공하는 메서드
+
+- `only()`: 한 번만
+- `times(int)`: 지정한 횟수만큼
+- `never()`: 호출 안함
+- `atLeast(int)`: 적어도 지정한 횟수만큼
+- `atLeastOnce()`: 적어도 한 번 / atLeast(1) 과 동일
+- `atMost(int)`: 최대 지정한 횟수만큼
+
+## 인자 캡쳐
+
+유닛 테스트를 하다보면 모의 객체를 호출할 때 사용한 인자를 검증해야 할 때가 있다.
+
+String, int 같은 경우 쉽지만 많은 속성을 가진 객체는 쉽게 검증하기 어렵다.
+
+이럴 때 인자 캡쳐를 활용할 수 있다.
+
+```java
+@Test
+void 회원가입_하면_메일_전송_argCaptor() {
+    userRegister.register("id", "pw", "email@email.com");
+
+    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+    then(mockEmailNotifier).should().sendRegisterEmail(captor.capture());
+
+    String realEmail = captor.getValue();
+    assertEquals("email@email.com", realEmail);
+}
+```
+
+Mockito 의 ArgumentCaptor 를 사용하면 메서드 호출 여부를 검증하는 과정에서 실제 호출할 때 전달한 인자를 보관할 수 있다.
+
+## JUnit 5 확장 설정
+
+`mockito-junit-jupiter` 의존을 추가하면 `MockitoExtension` 확장을 사용하여 `@Mock` 애노테이션을 붙인 필드에 대해 자동으로 모의 객체를 생성할 수 있다.
+
+```
+testImplementation 'org.mockito:mockito-junit-jupiter:3.6.28'
+```
+
+```java
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+public class JUnit5ExtensionTest {
+    @Mock
+    private GameNumGen getMock;
+}
+```
