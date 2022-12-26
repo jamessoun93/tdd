@@ -11,4 +11,5 @@
 - [Chapter 04. TDD 기능명세 설계](notes/4-TDD-%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8-%EC%84%A4%EA%B3%84.md)
 - [Chapter 07. 대역](notes/7-%EB%8C%80%EC%97%AD.md)
 - [Chapter 08. 테스트 가능한 설계](notes/8-테스트-가능한-설계.md)
+- [Chapter 09. 테스트 범위와 종류](notes/9-테스트-범위와-종류.md)
 - [Appendix C. Mockito](notes/C-mockito.md)
