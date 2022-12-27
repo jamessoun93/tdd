@@ -12,4 +12,5 @@
 - [Chapter 07. 대역](notes/7-%EB%8C%80%EC%97%AD.md)
 - [Chapter 08. 테스트 가능한 설계](notes/8-테스트-가능한-설계.md)
 - [Chapter 09. 테스트 범위와 종류](notes/9-테스트-범위와-종류.md)
+- [Chapter 10. 테스트 코드와 유지보수](notes/10-테스트-코드와-유지보수.md)
 - [Appendix C. Mockito](notes/C-mockito.md)
